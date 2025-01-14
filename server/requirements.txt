@@ -4,3 +4,4 @@ dotenv
 tavily-python
 trafilatura
 sentence-transformers
+google-generativeai
