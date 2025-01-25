@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -8,12 +9,23 @@ class ChatWebService {
 
   WebSocket? _socket;
 
+  final _searchResultsController = StreamController<Map<String, dynamic>>();
+  final _contentController = StreamController<Map<String, dynamic>>();
+
+  Stream<Map<String, dynamic>> get searchResultsStream =>
+      _searchResultsController.stream;
+  Stream<Map<String, dynamic>> get contentStream => _contentController.stream;
+
   void connect() {
     _socket = WebSocket(Uri.parse("ws://localhost:8000/ws/chat"));
 
     _socket!.messages.listen((message) {
       final data = json.decode(message);
-      data['type'] == 'result_content' ? print(data['content']) : print('null');
+      if (data['type'] == 'search_result') {
+        _searchResultsController.add(data);
+      } else if (data['type'] == 'content') {
+        _contentController.add(data);
+      }
     });
   }
 

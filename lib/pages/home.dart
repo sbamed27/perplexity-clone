@@ -12,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String fullResponse = "";
+
   @override
   void initState() {
     super.initState();
@@ -20,17 +22,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Row(
         children: [
-          Sidebar(),
+          const Sidebar(),
           Expanded(
             child: Column(
               children: [
-                Expanded(
+                const Expanded(
                   child: SearchSection(),
                 ),
-                Footer(),
+                StreamBuilder(
+                    stream: ChatWebService().contentStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                            child: CircularProgressIndicator.adaptive());
+                      }
+
+                      fullResponse += snapshot.data!['data'];
+                      return Center(child: Text(fullResponse));
+                    }),
+                const Footer(),
               ],
             ),
           ),
