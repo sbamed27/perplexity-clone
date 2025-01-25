@@ -11,7 +11,7 @@ class LLM:
     def generate_response(self, query: str, search_results: list[dict]):
         
         context_text = "\n\n".join([
-            f"Source {i+1} {result['url']} \n {result['title']}: \n {result['content']}"
+            f"Source {i+1} {result["url"]} \n {result["title"]}: \n {result["content"]}"
             for i, result in enumerate(search_results)
         ])
 
@@ -24,5 +24,6 @@ class LLM:
             Do not use your knowledge until it is absolutely necessary.
         """
 
-        response = self.model.generate_content(full_prompt)
-        return response.text
+        response = self.model.generate_content(full_prompt, stream=True)
+        for chunk in response:
+            yield chunk.text
