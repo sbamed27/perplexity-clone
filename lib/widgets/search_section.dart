@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:perplexity_clone/services/chat_web_service.dart';
 import 'package:perplexity_clone/theme/colors.dart';
 
-class SearchSection extends StatelessWidget {
+class SearchSection extends StatefulWidget {
   const SearchSection({super.key});
+
+  @override
+  State<SearchSection> createState() => _SearchSectionState();
+}
+
+class _SearchSectionState extends State<SearchSection> {
+  final queryController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    queryController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +41,11 @@ class SearchSection extends StatelessWidget {
               border: Border.all(color: AppColors.searchBarBorder)),
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: queryController,
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Ask anything...',
                     hintStyle: TextStyle(
@@ -55,7 +70,9 @@ class SearchSection extends StatelessWidget {
                         label: const Text('Attach')),
                     const Spacer(),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          ChatWebService().chat(queryController.text.trim());
+                        },
                         icon: const Icon(
                             color: AppColors.submitButton,
                             Icons.arrow_circle_right_sharp)),
