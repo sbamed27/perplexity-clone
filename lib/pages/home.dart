@@ -22,28 +22,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Row(
         children: [
-          const Sidebar(),
+          Sidebar(),
           Expanded(
             child: Column(
               children: [
-                const Expanded(
+                Expanded(
                   child: SearchSection(),
                 ),
-                StreamBuilder(
-                    stream: ChatWebService().contentStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator.adaptive());
-                      }
-
-                      fullResponse += snapshot.data!['data'];
-                      return Center(child: Text(fullResponse));
-                    }),
-                const Footer(),
+                Footer(),
               ],
             ),
           ),
